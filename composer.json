@@ -8,7 +8,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
-        "zgabievi/laravel-promocodes": "*"
+        "zgabievi/laravel-promocodes": "^9.0"
     },
     "autoload": {
         "psr-4": {
@@ -26,14 +26,5 @@
         "sort-packages": true
     },
     "minimum-stability": "dev",
-    "prefer-stable": true,
-    "repositories": {
-        "zgabievi/laravel-promocodes": {
-            "type": "path",
-            "url": "../../packages/zgabievi/laravel-promocodes",
-            "options": {
-                "symlink": true
-            }
-        }
-    }
+    "prefer-stable": true
 }
