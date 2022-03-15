@@ -1,0 +1,39 @@
+{
+    "name": "zgabievi/nova-promocodes",
+    "description": "A Laravel Nova tool.",
+    "keywords": [
+        "laravel",
+        "nova"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^8.1",
+        "zgabievi/laravel-promocodes": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Zorb\\NovaPromocodes\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Zorb\\NovaPromocodes\\ToolServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "repositories": {
+        "zgabievi/laravel-promocodes": {
+            "type": "path",
+            "url": "../../packages/zgabievi/laravel-promocodes",
+            "options": {
+                "symlink": true
+            }
+        }
+    }
+}
