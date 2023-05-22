@@ -5,6 +5,7 @@ namespace Zorb\NovaPromocodes;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Nova\Events\ServingNova;
+use Laravel\Nova\Http\Middleware\Authenticate;
 use Laravel\Nova\Nova;
 use Zorb\NovaPromocodes\Http\Middleware\Authorize;
 use Zorb\NovaPromocodes\Resources\Promocode;
@@ -18,7 +19,9 @@ class ToolServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'nova-promocodes');
+        $this->app->booted(function () {
+            $this->routes();
+        });
 
         $this->publishes([
             __DIR__ . '/../config/nova-promocodes.php' => config_path('nova-promocodes.php'),
@@ -48,8 +51,11 @@ class ToolServiceProvider extends ServiceProvider
             return;
         }
 
+        Nova::router(['nova', Authenticate::class, Authorize::class], 'promocodes')
+            ->group(__DIR__.'/../routes/inertia.php');
+
         Route::middleware(['nova', Authorize::class])
-            ->prefix('nova-api')
+            ->prefix('nova-vendor/promocodes')
             ->group(__DIR__ . '/../routes/api.php');
     }
 

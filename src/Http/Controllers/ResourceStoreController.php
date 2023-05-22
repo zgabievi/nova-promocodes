@@ -3,12 +3,8 @@
 namespace Zorb\NovaPromocodes\Http\Controllers;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Laravel\Nova\Http\Requests\CreateResourceRequest;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\DB;
-use Laravel\Nova\Nova;
 
 class ResourceStoreController extends Controller
 {

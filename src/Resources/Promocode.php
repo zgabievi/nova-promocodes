@@ -10,8 +10,20 @@ use Zorb\NovaPromocodes\Lenses\{
     UnlimitedPromocodes,
     ExpiredPromocodes
 };
-use Laravel\Nova\Fields\{BelongsToMany, BelongsTo, DateTime, KeyValue, Boolean, Number, Text, ID};
-use Zorb\NovaPromocodes\Filters\{BoundToUser, Expired, MultiUse, NoUsagesLeft, Unlimited};
+use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\KeyValue;
+use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Resource;
+use Zorb\NovaPromocodes\Filters\BoundToUser;
+use Zorb\NovaPromocodes\Filters\Expired;
+use Zorb\NovaPromocodes\Filters\MultiUse;
+use Zorb\NovaPromocodes\Filters\NoUsagesLeft;
+use Zorb\NovaPromocodes\Filters\Unlimited;
 use Zorb\NovaPromocodes\Actions\ExpirePromocode;
 use Zorb\Promocodes\Contracts\PromocodeContract;
 use Illuminate\Http\Request;
@@ -31,7 +43,7 @@ class Promocode extends Resource
      * @var bool
      */
     public static $displayInNavigation = false;
-
+    
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
@@ -127,11 +139,11 @@ class Promocode extends Resource
     public function filters(Request $request): array
     {
         return [
-//            Expired::make(),
-//            MultiUse::make(),
-//            Unlimited::make(),
-//            NoUsagesLeft::make(),
-//            BoundToUser::make(),
+            Expired::make(),
+            MultiUse::make(),
+            Unlimited::make(),
+            NoUsagesLeft::make(),
+            BoundToUser::make(),
         ];
     }
 

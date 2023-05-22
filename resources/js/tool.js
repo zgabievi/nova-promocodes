@@ -1,9 +1,4 @@
-Nova.booting((Vue, router, store) => {
-  router.addRoutes([
-    {
-      name: 'nova-promocodes',
-      path: '/nova-promocodes',
-      component: require('./components/Tool'),
-    },
-  ])
-})
+import Tool from './pages/Tool'
+Nova.booting((app, store) => {
+  Nova.inertia("nova-promocodes", Tool);
+});
