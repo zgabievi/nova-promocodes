@@ -2,11 +2,20 @@
 
 namespace Zorb\NovaPromocodes;
 
+use Illuminate\Http\Request;
+use Laravel\Nova\Menu\MenuSection;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Tool;
+use Zorb\NovaPromocodes\Resources\Promocode;
 
 class PromocodesTool extends Tool
 {
+    /**
+     * @var class-string
+     */
+    public $promocodeResource = Promocode::class;
+
+
     /**
      * Perform any tasks that need to happen when the tool is booted.
      *
@@ -19,12 +28,15 @@ class PromocodesTool extends Tool
     }
 
     /**
-     * Build the view that renders the navigation links for the tool.
+     * Build the menu that renders the navigation links for the tool.
      *
-     * @return \Illuminate\View\View
+     * @param  Request  $request
+     * @return mixed
      */
-    public function renderNavigation()
+    public function menu(Request $request)
     {
-        return view('nova-promocodes::navigation');
+        return MenuSection::make(__('Promocodes'))
+            ->path('/promocodes')
+            ->icon('shield-check');
     }
 }
