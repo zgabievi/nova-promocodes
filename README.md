@@ -1,11 +1,11 @@
 [![#StandWithUkraine](https://github-ads.s3.eu-central-1.amazonaws.com/support-ukraine.svg?t=1)](https://supportukrainenow.org)
-[![nova-promocodes](https://banners.beyondco.de/Nova%20Promocodes.jpeg?theme=light&packageManager=composer+require&packageName=zgabievi%2Fnova-promocodes&pattern=topography&style=style_2&description=A+Laravel+Nova+tool+for+zgabievi%2Flaravel-promocodes+library&md=1&showWatermark=0&fontSize=100px&images=https%3A%2F%2Flaravel.com%2Fimg%2Flogomark.min.svg)](https://github.com/zgabievi/nova-promocodes)
+[![nova-promocodes](https://banners.beyondco.de/Nova%20Promocodes.jpeg?theme=light&packageManager=composer+require&packageName=zgabievi%2Fnova-promocodes&pattern=topography&style=style_2&description=A+Laravel+Nova+tool+for+zgabievi%2Flaravel-promocodes+library&md=1&showWatermark=0&fontSize=100px&images=https%3A%2F%2Flaravel.com%2Fimg%2Flogomark.min.svg)](https://github.com/Aberbin96/nova-promocodes-4)
 
 # nova-promocodes
 
-[![Packagist](https://img.shields.io/packagist/v/zgabievi/nova-promocodes.svg)](https://packagist.org/packages/zgabievi/nova-promocodes)
-[![Packagist](https://img.shields.io/packagist/dt/zgabievi/nova-promocodes.svg)](https://packagist.org/packages/zgabievi/nova-promocodes)
-[![license](https://img.shields.io/github/license/zgabievi/nova-promocodes.svg)](https://packagist.org/packages/zgabievi/nova-promocodes)
+[![Packagist](https://img.shields.io/packagist/v/Aberbin96/nova-promocodes-4.svg)](https://packagist.org/packages/Aberbin96/nova-promocodes-4)
+[![Packagist](https://img.shields.io/packagist/dt/Aberbin96/nova-promocodes-4.svg)](https://packagist.org/packages/Aberbin96/nova-promocodes-4)
+[![license](https://img.shields.io/github/license/Aberbin96/nova-promocodes-4.svg)](https://packagist.org/packages/Aberbin96/nova-promocodes-4)
 
 Coupons and promotional codes generator for [Laravel Nova](https://nova.laravel.com). This package is created for [zgabievi/laravel-promocodes](https://github.com/zgabievi/laravel-promocodes).
 
@@ -14,7 +14,7 @@ Coupons and promotional codes generator for [Laravel Nova](https://nova.laravel.
 You can install the package via composer:
 
 ```bash
-composer require zgabievi/nova-promocodes
+composer require Aberbin96/nova-promocodes-4
 ```
 
 ## Configuration
@@ -99,14 +99,14 @@ For more information about parent package, visit [zgabievi/laravel-promocodes](h
 
 ## Contributing
 
-Please see [CONTRIBUTING](https://github.com/zgabievi/nova-promocodes/blob/master/CONTRIBUTING.md) for details.
+Please see [CONTRIBUTING](https://github.com/Aberbin96/nova-promocodes-4/blob/master/CONTRIBUTING.md) for details.
 
 ## Credits
 
 - [Zura Gabievi](https://github.com/zgabievi)
-- [All Contributors](https://github.com/zgabievi/nova-promocodes/graphs/contributors)
+- [All Contributors](https://github.com/Aberbin96/nova-promocodes-4/graphs/contributors)
 
 ## License
 
-The MIT License (MIT). Please see [License File](https://github.com/zgabievi/nova-promocodes/blob/master/LICENSE.md)
+The MIT License (MIT). Please see [License File](https://github.com/Aberbin96/nova-promocodes-4/blob/master/LICENSE.md)
 for more information.

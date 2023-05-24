@@ -51,31 +51,13 @@
             <div
                 class="flex flex-col md:flex-row md:items-center justify-center md:justify-end space-y-2 md:space-y-0 space-x-3"
             >
-                <CancelButton
-                tabindex="0"
-                dusk="cancel-create-button"
-                type="button"
-                @click="$emit('create-cancelled')"
-                />
-
                 <LoadingButton
-                v-if="shouldShowAddAnotherButton"
-                dusk="create-and-add-another-button"
-                type="button"
-                @click="submitViaCreateResourceAndAddAnother"
-                :disabled="isWorking"
-                :loading="wasSubmittedViaCreateResourceAndAddAnother"
+                  dusk="create-button"
+                  type="submit"
+                  :disabled="isWorking"
+                  :loading="wasSubmittedViaCreateResource"
                 >
-                {{ __('Create & Add Another') }}
-                </LoadingButton>
-
-                <LoadingButton
-                dusk="create-button"
-                type="submit"
-                :disabled="isWorking"
-                :loading="wasSubmittedViaCreateResource"
-                >
-                {{ createButtonLabel }}
+                  {{ __('Create') }}
                 </LoadingButton>
             </div>
             </form>
@@ -85,6 +67,10 @@
 
 <script>
 import { uid } from 'uid/single'
+import each from 'lodash/each'
+import tap from 'lodash/tap'
+import { mapActions } from 'vuex'
+
 
 export default {
   emits: ['refresh', 'create-cancelled'],
@@ -141,8 +127,6 @@ export default {
     }
 
     this.getFields()
-
-    this.mode == 'form' ? this.allowLeavingForm() : this.allowLeavingModal()
   },
 
   methods: {
@@ -196,12 +180,6 @@ export default {
       await this.createResource()
     },
 
-    async submitViaCreateResourceAndAddAnother() {
-      this.submittedViaCreateResourceAndAddAnother = true
-      this.submittedViaCreateResource = false
-      await this.createResource()
-    },
-
     /**
      * Create a new resource instance using the provided data.
      */
@@ -214,16 +192,13 @@ export default {
             data: { redirect, id },
           } = await this.createRequest()
 
-          this.mode === 'form'
-            ? this.allowLeavingForm()
-            : this.allowLeavingModal()
 
           // Reload the policies for Nova in case the user has new permissions
           await this.fetchPolicies()
 
           Nova.success(
             this.__('The :resource was created!', {
-              resource: this.resourceInformation.singularLabel.toLowerCase(),
+              resource: this.resourceInformation?.singularLabel?.toLowerCase() ?? 'promocodes',
             })
           )
 
@@ -248,10 +223,6 @@ export default {
           this.submittedViaCreateResource = true
           this.isWorking = false
 
-          this.mode === 'form'
-            ? this.preventLeavingForm()
-            : this.preventLeavingModal()
-
           this.handleOnCreateResponseError(error)
         }
       }
@@ -265,8 +236,7 @@ export default {
      * Send a create request for this resource
      */
     createRequest() {
-      return Nova.request().post(
-        `/nova-api/${this.resourceName}`,
+      return Nova.request().post(`/nova-vendor/promocodes/promocodes`,
         this.createResourceFormData(),
         {
           params: {
@@ -300,23 +270,33 @@ export default {
     onUpdateFormStatus() {
       this.$emit('update-form-status')
     },
+
+    handleOnCreateResponseError(error) {
+      if (error.response === undefined || error.response.status == 500) {
+        Nova.error(this.__('There was a problem submitting the form.'))
+      } else if (error.response.status == 422) {
+        this.validationErrors = new Errors(error.response.data.errors)
+        Nova.error(this.__('There was a problem submitting the form.'))
+      } else {
+        Nova.error(
+          this.__('There was a problem submitting the form.') +
+            ' "' +
+            error.response.statusText +
+            '"'
+        )
+      }
+    },
+
+    async fetchPolicies({ state, dispatch }) {
+      await dispatch('assignPropsFromInertia')
+    },
+
+    ...mapActions(['fetchPolicies']),
   },
 
   computed: {
     wasSubmittedViaCreateResource() {
       return this.isWorking && this.submittedViaCreateResource
-    },
-
-    wasSubmittedViaCreateResourceAndAddAnother() {
-      return this.isWorking && this.submittedViaCreateResourceAndAddAnother
-    },
-
-    singularName() {
-      if (this.relationResponse) {
-        return this.relationResponse.singularLabel
-      }
-
-      return this.resourceInformation.singularLabel
     },
 
     createButtonLabel() {
@@ -335,10 +315,6 @@ export default {
       return this.mode == 'form'
     },
 
-    canAddMoreResources() {
-      return this.authorizedToCreate
-    },
-
     alreadyFilled() {
       return this.relationResponse && this.relationResponse.alreadyFilled
     },
@@ -353,12 +329,18 @@ export default {
       )
     },
 
-    shouldShowAddAnotherButton() {
-      return (
-        Boolean(this.inFormMode && !this.alreadyFilled) &&
-        !Boolean(this.isHasOneRelationship || this.isHasOneThroughRelationship)
-      )
+    resourceInformation() {
+      return find(Nova.config('resources'), resource => {
+        return resource.uriKey === this.resourceName
+      })
     },
+
+    // shouldShowAddAnotherButton() {
+    //   return (
+    //     Boolean(this.inFormMode && !this.alreadyFilled) &&
+    //     !Boolean(this.isHasOneRelationship || this.isHasOneThroughRelationship)
+    //   )
+    // },
   },
 }
 </script>

@@ -30,8 +30,6 @@ class ResourceStoreController extends Controller
             $expiration = Carbon::parse($expiredAt);
         }
 
-        ray($request->input('details'));
-
         $promocodes = createPromocodes(
             mask: $request->input('mask'),
             characters: $request->input('characters'),

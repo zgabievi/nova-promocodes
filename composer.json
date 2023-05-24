@@ -1,11 +1,17 @@
 {
-    "name": "zgabievi/nova-promocodes",
+    "name": "aberbin96/nova-promocodes-4",
     "description": "A Laravel Nova tool.",
     "keywords": [
         "laravel",
         "nova"
     ],
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://nova.laravel.com"
+        }
+    ],
     "require": {
         "php": "^7.3|^8.0",
         "zgabievi/laravel-promocodes": "^9.0"
