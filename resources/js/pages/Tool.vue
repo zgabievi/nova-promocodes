@@ -71,7 +71,6 @@ import each from 'lodash/each'
 import tap from 'lodash/tap'
 import { mapActions } from 'vuex'
 
-
 export default {
   emits: ['refresh', 'create-cancelled'],
 
@@ -334,13 +333,6 @@ export default {
         return resource.uriKey === this.resourceName
       })
     },
-
-    // shouldShowAddAnotherButton() {
-    //   return (
-    //     Boolean(this.inFormMode && !this.alreadyFilled) &&
-    //     !Boolean(this.isHasOneRelationship || this.isHasOneThroughRelationship)
-    //   )
-    // },
   },
 }
 </script>
