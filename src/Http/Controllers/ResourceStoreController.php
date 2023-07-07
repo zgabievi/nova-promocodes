@@ -1,6 +1,6 @@
 <?php
 
-namespace Zorb\NovaPromocodes\Http\Controllers;
+namespace Aberbin\NovaPromocodes\Http\Controllers;
 
 use Carbon\Carbon;
 use Laravel\Nova\Http\Requests\CreateResourceRequest;

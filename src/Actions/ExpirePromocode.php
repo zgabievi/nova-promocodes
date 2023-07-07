@@ -1,6 +1,6 @@
 <?php
 
-namespace Zorb\NovaPromocodes\Actions;
+namespace Aberbin\NovaPromocodes\Actions;
 
 use Illuminate\Http\Request;
 use Illuminate\Queue\InteractsWithQueue;

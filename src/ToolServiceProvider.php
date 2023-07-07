@@ -1,14 +1,14 @@
 <?php
 
-namespace Zorb\NovaPromocodes;
+namespace Aberbin\NovaPromocodes;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Nova\Events\ServingNova;
 use Laravel\Nova\Http\Middleware\Authenticate;
 use Laravel\Nova\Nova;
-use Zorb\NovaPromocodes\Http\Middleware\Authorize;
-use Zorb\NovaPromocodes\Resources\Promocode;
+use Aberbin\NovaPromocodes\Http\Middleware\Authorize;
+use Aberbin\NovaPromocodes\Resources\Promocode;
 
 class ToolServiceProvider extends ServiceProvider
 {

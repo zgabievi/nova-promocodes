@@ -1,10 +1,9 @@
 const mix = require("laravel-mix");
-const webpack = require("webpack");
 const path = require("path");
 
 class NovaExtension {
     name() {
-        return "promocodes";
+        return "promocodes-4";
     }
 
     register(name) {

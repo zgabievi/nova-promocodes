@@ -20,7 +20,7 @@ composer require Aberbin96/nova-promocodes-4
 ## Configuration
 
 ```bash
-php artisan vendor:publish --provider="Zorb\NovaPromocodes\ToolServiceProvider"
+php artisan vendor:publish --provider="Aberbin\NovaPromocodes\ToolServiceProvider"
 ```
 
 Now you can change configurations as you need:
@@ -29,7 +29,7 @@ Now you can change configurations as you need:
 return [
     'models' => [
         'promocodes' => [
-            'resource' => \Zorb\NovaPromocodes\Resources\Promocode::class,
+            'resource' => \Aberbin\NovaPromocodes\Resources\Promocode::class,
         ],
 
         'users' => [
@@ -73,7 +73,7 @@ It's very easy to use. Methods are combined, so that you can configure promocode
 Include promocodes tool inside nova service provider.
 
 ```php
-use Zorb\NovaPromocodes\PromocodesTool;
+use Aberbin\NovaPromocodes\PromocodesTool;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
 {

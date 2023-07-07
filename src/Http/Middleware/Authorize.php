@@ -1,8 +1,8 @@
 <?php
 
-namespace Zorb\NovaPromocodes\Http\Middleware;
+namespace Aberbin\NovaPromocodes\Http\Middleware;
 
-use Zorb\NovaPromocodes\PromocodesTool;
+use Aberbin\NovaPromocodes\PromocodesTool;
 use Laravel\Nova\Nova;
 
 class Authorize

@@ -1,6 +1,6 @@
 <?php
 
-namespace Zorb\NovaPromocodes\Filters;
+namespace Aberbin\NovaPromocodes\Filters;
 
 use Laravel\Nova\Filters\BooleanFilter;
 use Illuminate\Http\Request;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Zorb\NovaPromocodes\Lenses;
+namespace Aberbin\NovaPromocodes\Lenses;
 
 use Laravel\Nova\Http\Requests\LensRequest;
 use Laravel\Nova\Fields\{

@@ -18,13 +18,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Zorb\\NovaPromocodes\\": "src/"
+            "Aberbin\\NovaPromocodes\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Zorb\\NovaPromocodes\\ToolServiceProvider"
+                "Aberbin\\NovaPromocodes\\ToolServiceProvider"
             ]
         }
     },
