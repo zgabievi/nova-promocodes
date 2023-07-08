@@ -1,21 +1,13 @@
 <template>
   <div>
-    <Head title="Promocodes" />
+    <Head :title="__('Promocodes')" />
+    <Heading class="mb-6">{{  }}</Heading>
+      <LoadingView :loading="loading">
+          <template v-if="shouldOverrideMeta && resourceInformation">
+            <Head :title="__('Create :resource', { resource: resourceInformation.singularLabel})"/>
+          </template>
 
-    <Heading class="mb-6">Promocodes</Heading>
-
-        <LoadingView :loading="loading">
-            <template v-if="shouldOverrideMeta && resourceInformation">
-            <Head
-                :title="
-                __('Create :resource', {
-                    resource: resourceInformation.singularLabel,
-                })
-                "
-            />
-            </template>
-
-            <form
+          <form
             class="space-y-8"
             v-if="panels"
             @submit="submitViaCreateResource"
@@ -23,34 +15,44 @@
             :data-form-unique-id="formUniqueId"
             autocomplete="off"
             ref="form"
-            >
+          >
             <div class="space-y-4">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow divide-y divide-gray-100 dark:divide-gray-700">
+                  <div class="md:flex md:flex-row space-y-2 md:space-y-0 py-5">
+                    <div class="w-full md:mt-2 px-6 md:px-8 md:w-1/5">
+                      <label for="usages_left-create-promocode-text-field" class="inline-block leading-tight space-x-1">
+                        <span>{{ __('Amount') }}</span>
+                      </label>
+                    </div>
+                    <div class="w-full space-y-2 px-6 md:px-8 md:w-3/5">
+                      <div class="space-y-1">
+                        <input type="number" v-model="amount" :placeholder="__('Amount')" class="w-full form-control form-input form-input-bordered" id="amount-create-promocode-text-field" dusk="amount" maxlength="-1">
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <component
-                v-for="panel in panels"
-                :key="panel.id"
-                :is="'form-' + panel.component"
-                @field-changed="onUpdateFormStatus"
-                @file-upload-started="handleFileUploadStarted"
-                @file-upload-finished="handleFileUploadFinished"
-                :shown-via-new-relation-modal="shownViaNewRelationModal"
-                :panel="panel"
-                :name="panel.name"
-                :resource-name="resourceName"
-                :fields="panel.fields"
-                :form-unique-id="formUniqueId"
-                :mode="mode"
-                :validation-errors="validationErrors"
-                :via-resource="viaResource"
-                :via-resource-id="viaResourceId"
-                :via-relationship="viaRelationship"
-                :show-help-text="true"
+                  v-for="panel in panels"
+                  :key="panel.id"
+                  :is="'form-' + panel.component"
+                  @field-changed="onUpdateFormStatus"
+                  @file-upload-started="handleFileUploadStarted"
+                  @file-upload-finished="handleFileUploadFinished"
+                  :shown-via-new-relation-modal="shownViaNewRelationModal"
+                  :panel="panel"
+                  :name="panel.name"
+                  :resource-name="resourceName"
+                  :fields="panel.fields"
+                  :form-unique-id="formUniqueId"
+                  :mode="mode"
+                  :validation-errors="validationErrors"
+                  :via-resource="viaResource"
+                  :via-resource-id="viaResourceId"
+                  :via-relationship="viaRelationship"
+                  :show-help-text="true"
                 />
             </div>
-
-            <!-- Create Button -->
-            <div
-                class="flex flex-col md:flex-row md:items-center justify-center md:justify-end space-y-2 md:space-y-0 space-x-3"
-            >
+            <div class="flex flex-col md:flex-row md:items-center justify-center md:justify-end space-y-2 md:space-y-0 space-x-3">
                 <LoadingButton
                   dusk="create-button"
                   type="submit"
@@ -60,292 +62,294 @@
                   {{ __('Create') }}
                 </LoadingButton>
             </div>
-            </form>
-        </LoadingView>
-    </div>
+          </form>
+      </LoadingView>
+  </div>
 </template>
 
 <script>
-import { uid } from 'uid/single'
-import each from 'lodash/each'
-import tap from 'lodash/tap'
-import { mapActions } from 'vuex'
+  import { uid } from 'uid/single'
+  import each from 'lodash/each'
+  import tap from 'lodash/tap'
+  import { mapActions } from 'vuex'
 
+  export default {
+    emits: ['refresh', 'create-cancelled'],
 
-export default {
-  emits: ['refresh', 'create-cancelled'],
+    metaInfo() {
+          return {
+              title: 'Promocodes',
+          }
+      },
 
-   metaInfo() {
-        return {
-            title: 'Promocodes',
-        }
-    },
+    data: () => ({
+      formUniqueId: uid(),
+      resourceName: 'promocodes',
+      relationResponse: null,
+      loading: true,
+      submittedViaCreateResourceAndAddAnother: false,
+      submittedViaCreateResource: false,
+      amount: 1,
+      fields: [],
+      panels: [],
+    }),
 
-  data: () => ({
-    formUniqueId: uid(),
-    resourceName: 'promocodes',
-    relationResponse: null,
-    loading: true,
-    submittedViaCreateResourceAndAddAnother: false,
-    submittedViaCreateResource: false,
-    fields: [],
-    panels: [],
-  }),
+    async created() {
+      if (Nova.missingResource(this.resourceName)) return Nova.visit('/404')
 
-  async created() {
-    if (Nova.missingResource(this.resourceName)) return Nova.visit('/404')
-
-    // If this create is via a relation index, then let's grab the field
-    // and use the label for that as the one we use for the title and buttons
-    if (this.isRelation) {
-      const { data } = await Nova.request().get(
-        '/nova-api/' + this.viaResource + '/field/' + this.viaRelationship,
-        {
-          params: {
-            resourceName: this.resourceName,
-            viaResource: this.viaResource,
-            viaResourceId: this.viaResourceId,
-            viaRelationship: this.viaRelationship,
-          },
-        }
-      )
-      this.relationResponse = data
-
-      if (this.isHasOneRelationship && this.alreadyFilled) {
-        Nova.error(this.__('The HasOne relationship has already been filled.'))
-
-        Nova.visit(`/resources/${this.viaResource}/${this.viaResourceId}`)
-      }
-
-      if (this.isHasOneThroughRelationship && this.alreadyFilled) {
-        Nova.error(
-          this.__('The HasOneThrough relationship has already been filled.')
+      // If this create is via a relation index, then let's grab the field
+      // and use the label for that as the one we use for the title and buttons
+      if (this.isRelation) {
+        const { data } = await Nova.request().get(
+          '/nova-api/' + this.viaResource + '/field/' + this.viaRelationship,
+          {
+            params: {
+              resourceName: this.resourceName,
+              viaResource: this.viaResource,
+              viaResourceId: this.viaResourceId,
+              viaRelationship: this.viaRelationship,
+            },
+          }
         )
+        this.relationResponse = data
 
-        Nova.visit(`/resources/${this.viaResource}/${this.viaResourceId}`)
-      }
-    }
+        if (this.isHasOneRelationship && this.alreadyFilled) {
+          Nova.error(this.__('The HasOne relationship has already been filled.'))
 
-    this.getFields()
-  },
-
-  methods: {
-    /**
-     * Handle resource loaded event.
-     */
-    handleResourceLoaded() {
-      this.loading = false
-
-      Nova.$emit('resource-loaded', {
-        resourceName: this.resourceName,
-        resourceId: null,
-        mode: 'create',
-      })
-    },
-
-    /**
-     * Get the available fields for the resource.
-     */
-    async getFields() {
-      this.panels = []
-      this.fields = []
-
-      const {
-        data: { panels, fields },
-      } = await Nova.request().get(
-        `/nova-api/${this.resourceName}/creation-fields`,
-        {
-          params: {
-            editing: true,
-            editMode: 'create',
-            inline: this.shownViaNewRelationModal,
-            fromResourceId: this.fromResourceId,
-            viaResource: this.viaResource,
-            viaResourceId: this.viaResourceId,
-            viaRelationship: this.viaRelationship,
-          },
+          Nova.visit(`/resources/${this.viaResource}/${this.viaResourceId}`)
         }
-      )
 
-      this.panels = panels
-      this.fields = fields
-
-      this.handleResourceLoaded()
-    },
-
-    async submitViaCreateResource(e) {
-      e.preventDefault()
-      this.submittedViaCreateResource = true
-      this.submittedViaCreateResourceAndAddAnother = false
-      await this.createResource()
-    },
-
-    /**
-     * Create a new resource instance using the provided data.
-     */
-    async createResource() {
-      this.isWorking = true
-
-      if (this.$refs.form.reportValidity()) {
-        try {
-          const {
-            data: { redirect, id },
-          } = await this.createRequest()
-
-
-          // Reload the policies for Nova in case the user has new permissions
-          await this.fetchPolicies()
-
-          Nova.success(
-            this.__('The :resource was created!', {
-              resource: this.resourceInformation?.singularLabel?.toLowerCase() ?? 'promocodes',
-            })
+        if (this.isHasOneThroughRelationship && this.alreadyFilled) {
+          Nova.error(
+            this.__('The HasOneThrough relationship has already been filled.')
           )
 
-          if (this.submittedViaCreateResource) {
-            this.$emit('resource-created', { id, redirect })
-          } else {
+          Nova.visit(`/resources/${this.viaResource}/${this.viaResourceId}`)
+        }
+      }
+
+      this.getFields()
+    },
+
+    methods: {
+      /**
+       * Handle resource loaded event.
+       */
+      handleResourceLoaded() {
+        this.loading = false
+
+        Nova.$emit('resource-loaded', {
+          resourceName: this.resourceName,
+          resourceId: null,
+          mode: 'create',
+        })
+      },
+
+      /**
+       * Get the available fields for the resource.
+       */
+      async getFields() {
+        this.panels = []
+        this.fields = []
+
+        const {
+          data: { panels, fields },
+        } = await Nova.request().get(
+          `/nova-api/${this.resourceName}/creation-fields`,
+          {
+            params: {
+              editing: true,
+              editMode: 'create',
+              inline: this.shownViaNewRelationModal,
+              fromResourceId: this.fromResourceId,
+              viaResource: this.viaResource,
+              viaResourceId: this.viaResourceId,
+              viaRelationship: this.viaRelationship,
+            },
+          }
+        )
+
+        this.panels = panels
+        this.fields = fields
+
+        this.handleResourceLoaded()
+      },
+
+      async submitViaCreateResource(e) {
+        e.preventDefault()
+        this.submittedViaCreateResource = true
+        this.submittedViaCreateResourceAndAddAnother = false
+        await this.createResource()
+      },
+
+      /**
+       * Create a new resource instance using the provided data.
+       */
+      async createResource() {
+        this.isWorking = true
+
+        if (this.amount > 0 && this.$refs.form.reportValidity()) {
+          try {
+            const {
+              data: { redirect, id },
+            } = await this.createRequest()
+
+
+            // Reload the policies for Nova in case the user has new permissions
+            await this.fetchPolicies()
+
+            Nova.success(
+              this.__('The :resource was created!', {
+                resource: this.resourceInformation?.singularLabel?.toLowerCase() ?? 'promocodes',
+              })
+            )
+
+            if (this.submittedViaCreateResource) {
+              this.$emit('resource-created', { id, redirect })
+            } else {
+              window.scrollTo(0, 0)
+
+              // Reset the form by refetching the fields
+              this.getFields()
+              this.resetErrors()
+              this.submittedViaCreateAndAddAnother = false
+              this.submittedViaCreateResource = false
+              this.isWorking = false
+
+              return
+            }
+          } catch (error) {
             window.scrollTo(0, 0)
 
-            // Reset the form by refetching the fields
-            this.getFields()
-            this.resetErrors()
             this.submittedViaCreateAndAddAnother = false
-            this.submittedViaCreateResource = false
+            this.submittedViaCreateResource = true
             this.isWorking = false
 
-            return
+            this.handleOnCreateResponseError(error)
           }
-        } catch (error) {
-          window.scrollTo(0, 0)
-
-          this.submittedViaCreateAndAddAnother = false
-          this.submittedViaCreateResource = true
-          this.isWorking = false
-
-          this.handleOnCreateResponseError(error)
         }
-      }
 
-      this.submittedViaCreateAndAddAnother = false
-      this.submittedViaCreateResource = true
-      this.isWorking = false
-    },
+        if (this.amount <= 0 ) 
+          Nova.error(
+            this.__('The amount of promocodes to create must be greater than 0.')
+          )
 
-    /**
-     * Send a create request for this resource
-     */
-    createRequest() {
-      return Nova.request().post(`/nova-vendor/promocodes/promocodes`,
-        this.createResourceFormData(),
-        {
-          params: {
-            editing: true,
-            editMode: 'create',
-          },
-        }
-      )
-    },
 
-    /**
-     * Create the form data for creating the resource.
-     */
-    createResourceFormData() {
-      return tap(new FormData(), formData => {
-        each(this.panels, panel => {
-          each(panel.fields, field => {
-            field.fill(formData)
-          })
-        })
+        this.submittedViaCreateAndAddAnother = false
+        this.submittedViaCreateResource = true
+        this.isWorking = false
+      },
 
-        formData.append('viaResource', this.viaResource)
-        formData.append('viaResourceId', this.viaResourceId)
-        formData.append('viaRelationship', this.viaRelationship)
-      })
-    },
-
-    /**
-     * Prevent accidental abandonment only if form was changed.
-     */
-    onUpdateFormStatus() {
-      this.$emit('update-form-status')
-    },
-
-    handleOnCreateResponseError(error) {
-      if (error.response === undefined || error.response.status == 500) {
-        Nova.error(this.__('There was a problem submitting the form.'))
-      } else if (error.response.status == 422) {
-        this.validationErrors = new Errors(error.response.data.errors)
-        Nova.error(this.__('There was a problem submitting the form.'))
-      } else {
-        Nova.error(
-          this.__('There was a problem submitting the form.') +
-            ' "' +
-            error.response.statusText +
-            '"'
+      /**
+       * Send a create request for this resource
+       */
+      createRequest() {
+        return Nova.request().post(`/nova-vendor/promocodes-4/promocodes-4`,
+          this.createResourceFormData(),
+          {
+            params: {
+              editing: true,
+              editMode: 'create',
+            },
+          }
         )
-      }
+      },
+
+      /**
+       * Create the form data for creating the resource.
+       */
+      createResourceFormData() {
+        return tap(new FormData(), formData => {
+          each(this.panels, panel => {
+            each(panel.fields, field => {
+              field.fill(formData)
+            })
+          })
+
+          formData.append('viaResource', this.viaResource)
+          formData.append('viaResourceId', this.viaResourceId)
+          formData.append('viaRelationship', this.viaRelationship)
+          formData.append('amount', this.amount)
+        })
+      },
+
+      /**
+       * Prevent accidental abandonment only if form was changed.
+       */
+      onUpdateFormStatus() {
+        this.$emit('update-form-status')
+      },
+
+      handleOnCreateResponseError(error) {
+        if (error.response === undefined || error.response.status == 500) {
+          Nova.error(this.__('There was a problem submitting the form.'))
+        } else if (error.response.status == 422) {
+          this.validationErrors = new Errors(error.response.data.errors)
+          Nova.error(this.__('There was a problem submitting the form.'))
+        } else {
+          Nova.error(
+            this.__('There was a problem submitting the form.') +
+              ' "' +
+              error.response.statusText +
+              '"'
+          )
+        }
+      },
+
+      async fetchPolicies({ state, dispatch }) {
+        await dispatch('assignPropsFromInertia')
+      },
+
+      ...mapActions(['fetchPolicies']),
     },
 
-    async fetchPolicies({ state, dispatch }) {
-      await dispatch('assignPropsFromInertia')
+    computed: {
+      wasSubmittedViaCreateResource() {
+        return this.isWorking && this.submittedViaCreateResource
+      },
+
+      createButtonLabel() {
+        return this.resourceInformation.createButtonLabel
+      },
+
+      isRelation() {
+        return Boolean(this.viaResourceId && this.viaRelationship)
+      },
+
+      shownViaNewRelationModal() {
+        return this.mode == 'modal'
+      },
+
+      inFormMode() {
+        return this.mode == 'form'
+      },
+
+      alreadyFilled() {
+        return this.relationResponse && this.relationResponse.alreadyFilled
+      },
+
+      isHasOneRelationship() {
+        return this.relationResponse && this.relationResponse.hasOneRelationship
+      },
+
+      isHasOneThroughRelationship() {
+        return (
+          this.relationResponse && this.relationResponse.hasOneThroughRelationship
+        )
+      },
+
+      resourceInformation() {
+        return find(Nova.config('resources'), resource => {
+          return resource.uriKey === this.resourceName
+        })
+      },
+
+      // shouldShowAddAnotherButton() {
+      //   return (
+      //     Boolean(this.inFormMode && !this.alreadyFilled) &&
+      //     !Boolean(this.isHasOneRelationship || this.isHasOneThroughRelationship)
+      //   )
+      // },
     },
-
-    ...mapActions(['fetchPolicies']),
-  },
-
-  computed: {
-    wasSubmittedViaCreateResource() {
-      return this.isWorking && this.submittedViaCreateResource
-    },
-
-    createButtonLabel() {
-      return this.resourceInformation.createButtonLabel
-    },
-
-    isRelation() {
-      return Boolean(this.viaResourceId && this.viaRelationship)
-    },
-
-    shownViaNewRelationModal() {
-      return this.mode == 'modal'
-    },
-
-    inFormMode() {
-      return this.mode == 'form'
-    },
-
-    alreadyFilled() {
-      return this.relationResponse && this.relationResponse.alreadyFilled
-    },
-
-    isHasOneRelationship() {
-      return this.relationResponse && this.relationResponse.hasOneRelationship
-    },
-
-    isHasOneThroughRelationship() {
-      return (
-        this.relationResponse && this.relationResponse.hasOneThroughRelationship
-      )
-    },
-
-    resourceInformation() {
-      return find(Nova.config('resources'), resource => {
-        return resource.uriKey === this.resourceName
-      })
-    },
-
-    // shouldShowAddAnotherButton() {
-    //   return (
-    //     Boolean(this.inFormMode && !this.alreadyFilled) &&
-    //     !Boolean(this.isHasOneRelationship || this.isHasOneThroughRelationship)
-    //   )
-    // },
-  },
-}
+  }
 </script>
-
-
-<style>
-/* Scoped Styles */
-</style>

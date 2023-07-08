@@ -1,4 +1,4 @@
 import Tool from './pages/Tool'
 Nova.booting((app, store) => {
-  Nova.inertia("nova-promocodes", Tool);
+  Nova.inertia("promocodes-4", Tool);
 });

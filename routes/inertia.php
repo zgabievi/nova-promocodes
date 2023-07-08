@@ -15,5 +15,5 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 */
 
 Route::get('/', function (NovaRequest $request) {
-    return inertia('nova-promocodes');
+    return inertia('promocodes-4');
 });

@@ -25,7 +25,7 @@ use Aberbin\NovaPromocodes\Filters\MultiUse;
 use Aberbin\NovaPromocodes\Filters\NoUsagesLeft;
 use Aberbin\NovaPromocodes\Filters\Unlimited;
 use Aberbin\NovaPromocodes\Actions\ExpirePromocode;
-use Aberbin\Promocodes\Contracts\PromocodeContract;
+use Zorb\Promocodes\Contracts\PromocodeContract;
 use Illuminate\Http\Request;
 
 class Promocode extends Resource
@@ -42,7 +42,7 @@ class Promocode extends Resource
      *
      * @var bool
      */
-    public static $displayInNavigation = false;
+    public static $displayInNavigation = true;
     
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -80,17 +80,17 @@ class Promocode extends Resource
      */
     public function fields(Request $request): array
     {
-        $userResource = explode('\\', config('nova-promocodes.models.users.resource'));
+        $userResource = explode('\\', config('nova-promocodes-4.models.users.resource'));
         $userResource = last($userResource);
 
         return [
             ID::make()->sortable(),
 
-            Number::make(__('Amount'), 'amount')
-                ->default(1)
-                ->help('How many promocodes should be created?')
-                ->required()
-                ->onlyOnForms(),
+            // Number::make(__('Amount'), 'amount')
+            //     ->default(1)
+            //     ->help('How many promocodes should be created?')
+            //     ->required()
+            //     ->onlyOnForms(),
 
             BelongsTo::make($userResource)
                 ->nullable(),

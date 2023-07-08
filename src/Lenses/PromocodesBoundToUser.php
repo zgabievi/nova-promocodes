@@ -48,7 +48,7 @@ class PromocodesBoundToUser extends Lens
      */
     public function fields(Request $request)
     {
-        $userResource = explode('\\', config('nova-promocodes.models.users.resource'));
+        $userResource = explode('\\', config('nova-promocodes-4.models.users.resource'));
         $userResource = last($userResource);
 
         return [

@@ -23,8 +23,8 @@ class PromocodesTool extends Tool
      */
     public function boot()
     {
-        Nova::script('nova-promocodes', __DIR__.'/../dist/js/tool.js');
-        Nova::style('nova-promocodes', __DIR__.'/../dist/css/tool.css');
+        Nova::script('nova-promocodes-4', __DIR__.'/../dist/js/tool.js');
+        Nova::style('nova-promocodes-4', __DIR__.'/../dist/css/tool.css');
     }
 
     /**
@@ -36,7 +36,7 @@ class PromocodesTool extends Tool
     public function menu(Request $request)
     {
         return MenuSection::make(__('Promocodes'))
-            ->path('/promocodes')
+            ->path('/promocodes-4')
             ->icon('shield-check');
     }
 }

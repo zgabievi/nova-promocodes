@@ -24,7 +24,7 @@ class ToolServiceProvider extends ServiceProvider
         });
 
         $this->publishes([
-            __DIR__ . '/../config/nova-promocodes.php' => config_path('nova-promocodes.php'),
+            __DIR__ . '/../config/nova-promocodes-4.php' => config_path('nova-promocodes-4.php'),
         ], 'config');
 
         $this->app->booted(function () {
@@ -51,11 +51,11 @@ class ToolServiceProvider extends ServiceProvider
             return;
         }
 
-        Nova::router(['nova', Authenticate::class, Authorize::class], 'promocodes')
+        Nova::router(['nova', Authenticate::class, Authorize::class], 'promocodes-4')
             ->group(__DIR__.'/../routes/inertia.php');
 
         Route::middleware(['nova', Authorize::class])
-            ->prefix('nova-vendor/promocodes')
+            ->prefix('nova-vendor/promocodes-4')
             ->group(__DIR__ . '/../routes/api.php');
     }
 
@@ -66,6 +66,6 @@ class ToolServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/nova-promocodes.php', 'nova-promocodes');
+        $this->mergeConfigFrom(__DIR__ . '/../config/nova-promocodes-4.php', 'nova-promocodes-4');
     }
 }
