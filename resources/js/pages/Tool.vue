@@ -308,20 +308,12 @@
         return this.isWorking && this.submittedViaCreateResource
       },
 
-      createButtonLabel() {
-        return this.resourceInformation.createButtonLabel
-      },
-
       isRelation() {
         return Boolean(this.viaResourceId && this.viaRelationship)
       },
 
       shownViaNewRelationModal() {
         return this.mode == 'modal'
-      },
-
-      inFormMode() {
-        return this.mode == 'form'
       },
 
       alreadyFilled() {
@@ -343,13 +335,6 @@
           return resource.uriKey === this.resourceName
         })
       },
-
-      // shouldShowAddAnotherButton() {
-      //   return (
-      //     Boolean(this.inFormMode && !this.alreadyFilled) &&
-      //     !Boolean(this.isHasOneRelationship || this.isHasOneThroughRelationship)
-      //   )
-      // },
     },
   }
 </script>
