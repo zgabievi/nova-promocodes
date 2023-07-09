@@ -6,7 +6,7 @@ Old version: https://github.com/zgabievi/nova-promocodes
 ## Configuration
 
 ```bash
-    php artisan vendor:publish --provider="Zorb\NovaPromocodes\ToolServiceProvider"
+    php artisan vendor:publish --provider="Aberbin96\NovaPromocodes\ToolServiceProvider"
 ```
 
 Now you can change configurations as you need:
@@ -15,7 +15,7 @@ Now you can change configurations as you need:
     return [
         'models' => [
             'promocodes' => [
-                'resource' => \Zorb\NovaPromocodes\Resources\Promocode::class,
+                'resource' => \Aberbin96\NovaPromocodes\Resources\Promocode::class,
             ],
 
             'users' => [
@@ -36,7 +36,7 @@ After you configure this file, run migrations:
 Include promocodes tool inside nova service provider.
 
 ```php
-use Zorb\NovaPromocodes\PromocodesTool;
+use Aberbin96\NovaPromocodes\PromocodesTool;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
 {

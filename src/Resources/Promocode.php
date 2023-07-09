@@ -1,8 +1,8 @@
 <?php
 
-namespace Aberbin\NovaPromocodes\Resources;
+namespace Aberbin96\NovaPromocodes\Resources;
 
-use Aberbin\NovaPromocodes\Lenses\{
+use Aberbin96\NovaPromocodes\Lenses\{
     PromocodesWithNoUsagesLeft,
     PromocodesAssignedToUser,
     PromocodesWithMultiUse,
@@ -19,12 +19,12 @@ use Laravel\Nova\Fields\KeyValue;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Resource;
-use Aberbin\NovaPromocodes\Filters\BoundToUser;
-use Aberbin\NovaPromocodes\Filters\Expired;
-use Aberbin\NovaPromocodes\Filters\MultiUse;
-use Aberbin\NovaPromocodes\Filters\NoUsagesLeft;
-use Aberbin\NovaPromocodes\Filters\Unlimited;
-use Aberbin\NovaPromocodes\Actions\ExpirePromocode;
+use Aberbin96\NovaPromocodes\Filters\BoundToUser;
+use Aberbin96\NovaPromocodes\Filters\Expired;
+use Aberbin96\NovaPromocodes\Filters\MultiUse;
+use Aberbin96\NovaPromocodes\Filters\NoUsagesLeft;
+use Aberbin96\NovaPromocodes\Filters\Unlimited;
+use Aberbin96\NovaPromocodes\Actions\ExpirePromocode;
 use Zorb\Promocodes\Contracts\PromocodeContract;
 use Illuminate\Http\Request;
 

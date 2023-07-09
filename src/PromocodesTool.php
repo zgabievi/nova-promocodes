@@ -1,12 +1,12 @@
 <?php
 
-namespace Aberbin\NovaPromocodes;
+namespace Aberbin96\NovaPromocodes;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Menu\MenuSection;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Tool;
-use Aberbin\NovaPromocodes\Resources\Promocode;
+use Aberbin96\NovaPromocodes\Resources\Promocode;
 
 class PromocodesTool extends Tool
 {

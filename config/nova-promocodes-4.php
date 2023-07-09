@@ -3,7 +3,7 @@
 return [
     'models' => [
         'promocodes' => [
-            'resource' => \Aberbin\NovaPromocodes\Resources\Promocode::class,
+            'resource' => \Aberbin96\NovaPromocodes\Resources\Promocode::class,
         ],
 
         'users' => [

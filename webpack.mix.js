@@ -6,4 +6,4 @@ mix.setPublicPath("dist")
     .js("resources/js/tool.js", "js")
     .vue({ version: 3 })
     .sass("resources/sass/tool.scss", "css")
-    .nova("aberbin/nova-promocodes-4");
+    .nova("aberbin96/nova-promocodes-4");

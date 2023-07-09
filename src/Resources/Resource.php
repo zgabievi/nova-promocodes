@@ -1,6 +1,6 @@
 <?php
 
-namespace Aberbin\NovaPromocodes\Resources;
+namespace Aberbin96\NovaPromocodes\Resources;
 
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Resource as NovaResource;
