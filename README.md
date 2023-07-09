@@ -2,10 +2,13 @@
 # Nova 4 promocodes
 Adaptation of the promocodes library for laravel nova 4.
 
-Old version: https://github.com/zgabievi/nova-promocodes
+Nova 3 version: https://github.com/zgabievi/nova-promocodes
+
 ## Configuration
 
+
 ```bash
+    php artisan vendor:publish --provider="Zorb\Promocodes\PromocodesServiceProvider"
     php artisan vendor:publish --provider="Aberbin96\NovaPromocodes\ToolServiceProvider"
 ```
 
@@ -54,7 +57,9 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         ];
     }
 }
-```## Parent Package
+```
+
+## Parent Package
 
 For more information about parent package, visit [zgabievi/laravel-promocodes](https://github.com/zgabievi/laravel-promocodes).
 
