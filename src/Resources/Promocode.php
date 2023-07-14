@@ -10,20 +10,8 @@ use Aberbin96\NovaPromocodes\Lenses\{
     UnlimitedPromocodes,
     ExpiredPromocodes
 };
-use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\BelongsToMany;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\KeyValue;
-use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Resource;
-use Aberbin96\NovaPromocodes\Filters\BoundToUser;
-use Aberbin96\NovaPromocodes\Filters\Expired;
-use Aberbin96\NovaPromocodes\Filters\MultiUse;
-use Aberbin96\NovaPromocodes\Filters\NoUsagesLeft;
-use Aberbin96\NovaPromocodes\Filters\Unlimited;
+use Laravel\Nova\Fields\{BelongsToMany, BelongsTo, DateTime, KeyValue, Boolean, Number, Text, ID};
+use Aberbin96\NovaPromocodes\Filters\{BoundToUser, Expired, MultiUse, NoUsagesLeft, Unlimited};
 use Aberbin96\NovaPromocodes\Actions\ExpirePromocode;
 use Zorb\Promocodes\Contracts\PromocodeContract;
 use Illuminate\Http\Request;
