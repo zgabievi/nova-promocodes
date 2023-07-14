@@ -35,7 +35,7 @@ class PromocodesTool extends Tool
      */
     public function menu(Request $request)
     {
-        return MenuSection::make(__('Promocodes'))
+        return MenuSection::make(__('Promocodes Batch'))
             ->path('/promocodes-4')
             ->icon('shield-check');
     }

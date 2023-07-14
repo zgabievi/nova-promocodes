@@ -14,6 +14,7 @@ use Laravel\Nova\Fields\{BelongsToMany, BelongsTo, DateTime, KeyValue, Boolean, 
 use Aberbin96\NovaPromocodes\Filters\{BoundToUser, Expired, MultiUse, NoUsagesLeft, Unlimited};
 use Aberbin96\NovaPromocodes\Actions\ExpirePromocode;
 use Zorb\Promocodes\Contracts\PromocodeContract;
+use Laravel\Nova\Resource;
 use Illuminate\Http\Request;
 
 class Promocode extends Resource
