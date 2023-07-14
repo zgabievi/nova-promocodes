@@ -69,7 +69,7 @@ class Promocode extends Resource
      */
     public function fields(Request $request): array
     {
-        $userResource = explode('\\', config('nova-promocodes-4.models.users.resource'));
+        $userResource = explode('\\', config('promocodes.models.users.resource'));
         $userResource = last($userResource);
 
         return [

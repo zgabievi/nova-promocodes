@@ -8,7 +8,6 @@ Nova 3 version: https://github.com/zgabievi/nova-promocodes
 
 
 ```bash
-    php artisan vendor:publish --provider="Zorb\Promocodes\PromocodesServiceProvider"
     php artisan vendor:publish --provider="Aberbin96\NovaPromocodes\ToolServiceProvider"
 ```
 
