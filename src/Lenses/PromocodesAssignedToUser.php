@@ -36,7 +36,7 @@ class PromocodesAssignedToUser extends Lens
     public static function query(LensRequest $request, $query)
     {
         return $request->withOrdering($request->withFilters(
-            $query->whereNotNull('user_id')
+            $query->whereNotNull(config('promocodes.models.users.foreign_id', 'user_id'))
         ));
     }
 

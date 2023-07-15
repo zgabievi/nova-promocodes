@@ -1,10 +1,10 @@
 <template>
   <div>
-    <Head :title="__('Promocodes')" />
+    <Head :title="__('Promocode Batch')" />
     <Heading class="mb-6">{{  }}</Heading>
       <LoadingView :loading="loading">
           <template v-if="shouldOverrideMeta && resourceInformation">
-            <Head :title="__('Create :resource', { resource: resourceInformation.singularLabel})"/>
+            <Head :title="__('Promocode Batch')"/>
           </template>
 
           <form
@@ -17,40 +17,26 @@
             ref="form"
           >
             <div class="space-y-4">
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow divide-y divide-gray-100 dark:divide-gray-700">
-                  <div class="md:flex md:flex-row space-y-2 md:space-y-0 py-5">
-                    <div class="w-full md:mt-2 px-6 md:px-8 md:w-1/5">
-                      <label for="usages_left-create-promocode-text-field" class="inline-block leading-tight space-x-1">
-                        <span>{{ __('Amount') }}</span>
-                      </label>
-                    </div>
-                    <div class="w-full space-y-2 px-6 md:px-8 md:w-3/5">
-                      <div class="space-y-1">
-                        <input type="number" v-model="amount" :placeholder="__('Amount')" class="w-full form-control form-input form-input-bordered" id="amount-create-promocode-text-field" dusk="amount" maxlength="-1">
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <component
-                  v-for="panel in panels"
-                  :key="panel.id"
-                  :is="'form-' + panel.component"
-                  @field-changed="onUpdateFormStatus"
-                  @file-upload-started="handleFileUploadStarted"
-                  @file-upload-finished="handleFileUploadFinished"
-                  :shown-via-new-relation-modal="shownViaNewRelationModal"
-                  :panel="panel"
-                  :name="panel.name"
-                  :resource-name="resourceName"
-                  :fields="panel.fields"
-                  :form-unique-id="formUniqueId"
-                  :mode="mode"
-                  :validation-errors="validationErrors"
-                  :via-resource="viaResource"
-                  :via-resource-id="viaResourceId"
-                  :via-relationship="viaRelationship"
-                  :show-help-text="true"
-                />
+              <component
+                    v-for="panel in panels"
+                    :key="panel.id"
+                    :is="'form-' + panel.component"
+                    @field-changed="onUpdateFormStatus"
+                    @file-upload-started="handleFileUploadStarted"
+                    @file-upload-finished="handleFileUploadFinished"
+                    :shown-via-new-relation-modal="shownViaNewRelationModal"
+                    :panel="panel"
+                    :name="__('Promocode Batch')"
+                    :resource-name="resourceName"
+                    :fields="panel.fields"
+                    :form-unique-id="formUniqueId"
+                    :mode="mode"
+                    :validation-errors="validationErrors"
+                    :via-resource="viaResource"
+                    :via-resource-id="viaResourceId"
+                    :via-relationship="viaRelationship"
+                    :show-help-text="true"
+              />
             </div>
             <div class="flex flex-col md:flex-row md:items-center justify-center md:justify-end space-y-2 md:space-y-0 space-x-3">
                 <LoadingButton
@@ -78,18 +64,17 @@
 
     metaInfo() {
           return {
-              title: 'Promocodes',
+              title: 'Promocode Batch',
           }
       },
 
     data: () => ({
       formUniqueId: uid(),
-      resourceName: 'promocodes',
+      resourceName: 'promocode-batches',
       relationResponse: null,
       loading: true,
       submittedViaCreateResourceAndAddAnother: false,
       submittedViaCreateResource: false,
-      amount: 1,
       fields: [],
       panels: [],
     }),
@@ -170,12 +155,13 @@
         )
 
         this.panels = panels
+        this.panels[0].name= this.__('Promocode Batch');
         this.fields = fields
 
         this.handleResourceLoaded()
       },
 
-      async submitViaCreateResource(e) {
+      async submitViaCreateResource(e) {  
         e.preventDefault()
         this.submittedViaCreateResource = true
         this.submittedViaCreateResourceAndAddAnother = false
@@ -188,7 +174,7 @@
       async createResource() {
         this.isWorking = true
 
-        if (this.amount > 0 && this.$refs.form.reportValidity()) {
+        if (this.$refs.form.reportValidity()) {
           try {
             const {
               data: { redirect, id },
@@ -229,12 +215,6 @@
           }
         }
 
-        if (this.amount <= 0 ) 
-          Nova.error(
-            this.__('The amount of promocodes to create must be greater than 0.')
-          )
-
-
         this.submittedViaCreateAndAddAnother = false
         this.submittedViaCreateResource = true
         this.isWorking = false
@@ -269,7 +249,6 @@
           formData.append('viaResource', this.viaResource)
           formData.append('viaResourceId', this.viaResourceId)
           formData.append('viaRelationship', this.viaRelationship)
-          formData.append('amount', this.amount)
         })
       },
 

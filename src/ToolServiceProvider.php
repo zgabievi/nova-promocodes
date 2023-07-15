@@ -9,6 +9,7 @@ use Laravel\Nova\Http\Middleware\Authenticate;
 use Laravel\Nova\Nova;
 use Aberbin96\NovaPromocodes\Http\Middleware\Authorize;
 use Aberbin96\NovaPromocodes\Resources\Promocode;
+use Aberbin96\NovaPromocodes\Resources\PromocodeBatch;
 
 class ToolServiceProvider extends ServiceProvider
 {
@@ -24,7 +25,7 @@ class ToolServiceProvider extends ServiceProvider
         });
 
         $this->publishes([
-            __DIR__ . '/../config/promocodes.php' => config_path('nova-promocodes-4.php'),
+            __DIR__ . '/../config/nova-promocodes-4.php' => config_path('promocodes.php'),
         ], 'config');
 
 
@@ -36,6 +37,7 @@ class ToolServiceProvider extends ServiceProvider
         $this->app->booted(function () {
             Nova::resources([
                 Promocode::class,
+                PromocodeBatch::class,
             ]);
 
             $this->routes();

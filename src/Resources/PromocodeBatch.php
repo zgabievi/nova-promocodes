@@ -2,21 +2,11 @@
 
 namespace Aberbin96\NovaPromocodes\Resources;
 
-use Aberbin96\NovaPromocodes\Lenses\{
-    PromocodesWithNoUsagesLeft,
-    PromocodesAssignedToUser,
-    PromocodesWithMultiUse,
-    PromocodesBoundToUser,
-    UnlimitedPromocodes,
-    ExpiredPromocodes
-};
 use Laravel\Nova\Fields\{BelongsToMany, BelongsTo, DateTime, KeyValue, Boolean, Number, Text, ID};
-use Aberbin96\NovaPromocodes\Filters\{BoundToUser, Expired, MultiUse, NoUsagesLeft, Unlimited};
-use Aberbin96\NovaPromocodes\Actions\ExpirePromocode;
 use Zorb\Promocodes\Contracts\PromocodeContract;
 use Illuminate\Http\Request;
 
-class Promocode extends Resource
+class PromocodeBatch extends Resource
 {
     
     /**
@@ -25,24 +15,13 @@ class Promocode extends Resource
      * @var string
      */
     public static $model = PromocodeContract::class;
-    /**
-     * Get a fresh instance of the model represented by the resource.
-     *
-     * @return mixed
-     */
-    public static function newModel(): mixed
-    {
-        $model = app(PromocodeContract::class);
-
-        return new $model;
-    }
 
     /**
      * Hide resource from Nova's standard menu.
      *
      * @var bool
      */
-    public static $displayInNavigation = true;
+    public static $displayInNavigation = false;
     
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -61,6 +40,18 @@ class Promocode extends Resource
     ];
 
     /**
+     * Get a fresh instance of the model represented by the resource.
+     *
+     * @return mixed
+     */
+    public static function newModel(): mixed
+    {
+        $model = app(PromocodeContract::class);
+
+        return new $model;
+    }
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @param Request $request
@@ -74,10 +65,17 @@ class Promocode extends Resource
         return [
             ID::make()->sortable(),
 
+            Number::make(__('Amount'), 'amount')
+                ->default(1)
+                ->help('How many promocodes should be created?')
+                ->required()
+                ->onlyOnForms(),
+
             BelongsTo::make($userResource)
                 ->nullable(),
 
-            Text::make(__('Code'), 'code'),
+            Text::make(__('Code'), 'code')
+                ->exceptOnForms(),
 
             Text::make(__('Mask'), 'mask')
                 ->default(config('promocodes.code_mask'))
@@ -119,13 +117,7 @@ class Promocode extends Resource
      */
     public function filters(Request $request): array
     {
-        return [
-            Expired::make(),
-            MultiUse::make(),
-            Unlimited::make(),
-            NoUsagesLeft::make(),
-            BoundToUser::make(),
-        ];
+        return [];
     }
 
     /**
@@ -136,14 +128,7 @@ class Promocode extends Resource
      */
     public function lenses(Request $request): array
     {
-        return [
-            ExpiredPromocodes::make(),
-            UnlimitedPromocodes::make(),
-            PromocodesWithMultiUse::make(),
-            PromocodesWithNoUsagesLeft::make(),
-            PromocodesBoundToUser::make(),
-            PromocodesAssignedToUser::make(),
-        ];
+        return [];
     }
 
     /**
@@ -154,10 +139,6 @@ class Promocode extends Resource
      */
     public function actions(Request $request)
     {
-        return [
-            ExpirePromocode::make()
-                ->showOnTableRow()
-                ->canSee(fn() => !$this->resource->isExpired()),
-        ];
+        return [];
     }
 }
