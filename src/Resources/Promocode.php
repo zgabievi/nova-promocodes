@@ -79,11 +79,6 @@ class Promocode extends Resource
 
             Text::make(__('Code'), 'code'),
 
-            Text::make(__('Characters'), 'characters')
-                ->default(config('promocodes.allowed_symbols'))
-                ->required()
-                ->onlyOnForms(),
-
             Boolean::make(__('Unlimited'), 'unlimited')
                 ->default(false)
                 ->onlyOnForms(),
