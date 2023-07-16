@@ -69,7 +69,9 @@ class Promocode extends Resource
     public function fields(Request $request): array
     {
         $userResource = explode('\\', config('promocodes.models.users.resource'));
+        $userRelation = explode('\\', config('promocodes.models.users.table_name'));
         $userResource = last($userResource);
+        $userRelation = last($userRelation);
 
         return [
             ID::make()->sortable(),
@@ -88,7 +90,7 @@ class Promocode extends Resource
 
             KeyValue::make(__('Details'), 'details'),
 
-            BelongsToMany::make($userResource),
+            BelongsToMany::make($userResource, $userRelation),
         ];
     }
 
