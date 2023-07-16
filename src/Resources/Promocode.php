@@ -74,26 +74,17 @@ class Promocode extends Resource
         return [
             ID::make()->sortable(),
 
-            BelongsTo::make($userResource)
-                ->nullable(),
+            BelongsTo::make($userResource)->nullable(),
 
-            Text::make(__('Code'), 'code'),
+            Text::make(__('Code'), 'code')->rules('required', 'unique:promocodes,code,{{resourceId}}'),
 
-            Boolean::make(__('Unlimited'), 'unlimited')
-                ->default(false)
-                ->onlyOnForms(),
+            Number::make(__('Usages Left'), 'usages_left')->default(1),
 
-            Number::make(__('Usages Left'), 'usages_left')
-                ->default(1),
+            Boolean::make(__('Bound to User'), 'bound_to_user')->default(false),
 
-            Boolean::make(__('Bound to User'), 'bound_to_user')
-                ->default(false),
+            Boolean::make(__('Multi Use'), 'multi_use')->default(false),
 
-            Boolean::make(__('Multi Use'), 'multi_use')
-                ->default(false),
-
-            DateTime::make(__('Expired at'), 'expired_at')
-                ->nullable(),
+            DateTime::make(__('Expired at'), 'expired_at')->nullable(),
 
             KeyValue::make(__('Details'), 'details'),
 
@@ -145,9 +136,7 @@ class Promocode extends Resource
     public function actions(Request $request)
     {
         return [
-            ExpirePromocode::make()
-                ->showOnTableRow()
-                ->canSee(fn() => !$this->resource->isExpired()),
+            ExpirePromocode::make()->showOnTableRow()->canSee(fn() => !$this->resource->isExpired()),
         ];
     }
 }
