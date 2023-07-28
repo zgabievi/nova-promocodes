@@ -2,7 +2,7 @@
 
 namespace Aberbin96\NovaPromocodes\Resources;
 
-use Laravel\Nova\Fields\{BelongsToMany, BelongsTo, DateTime, KeyValue, Boolean, Number, Text, ID};
+use Laravel\Nova\Fields\{BelongsTo, DateTime, KeyValue, Boolean, Number, Text, ID};
 use Zorb\Promocodes\Contracts\PromocodeContract;
 use Illuminate\Http\Request;
 
@@ -63,11 +63,9 @@ class PromocodeBatch extends Resource
         $userResource = last($userResource);
 
         return [
-            ID::make()->sortable(),
-
             Number::make(__('Amount'), 'amount')
                 ->default(1)
-                ->help('How many promocodes should be created?')
+                ->help(__('How many promocodes should be created?'))
                 ->required()
                 ->onlyOnForms(),
 
@@ -92,20 +90,22 @@ class PromocodeBatch extends Resource
                 ->onlyOnForms(),
 
             Number::make(__('Usages Left'), 'usages_left')
-                ->default(1),
+                ->default(1)
+                ->onlyOnForms(),
 
             Boolean::make(__('Bound to User'), 'bound_to_user')
-                ->default(false),
+                ->default(false)
+                ->onlyOnForms(),
 
             Boolean::make(__('Multi Use'), 'multi_use')
-                ->default(false),
+                ->default(false)
+                ->onlyOnForms(),
 
             DateTime::make(__('Expired at'), 'expired_at')
-                ->nullable(),
+                ->nullable()
+                ->onlyOnForms(),
 
             KeyValue::make(__('Details'), 'details'),
-
-            BelongsToMany::make($userResource),
         ];
     }
 

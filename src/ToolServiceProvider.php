@@ -35,10 +35,18 @@ class ToolServiceProvider extends ServiceProvider
         ], 'migrations');
 
         $this->app->booted(function () {
-            Nova::resources([
-                Promocode::class,
+
+            $promocodeResource = explode('\\', config('promocodes.models.promocodes.resource'));
+            $promocodeResource = last($promocodeResource);
+            
+            $resources = [
                 PromocodeBatch::class,
-            ]);
+            ];
+
+            if($promocodeResource === Promocode::class) 
+                $resources[] = Promocode::class;
+
+            Nova::resources($resources);
 
             $this->routes();
         });

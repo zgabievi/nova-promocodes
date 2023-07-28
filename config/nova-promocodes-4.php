@@ -13,6 +13,7 @@ return [
             'model' => \App\Models\User::class,
             'table_name' => 'users',
             'foreign_id' => 'user_id',
+            'resource_name' => \App\Nova\User::class,
             'resource' => \App\Nova\User::class,
         ],
 

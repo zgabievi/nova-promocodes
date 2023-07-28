@@ -15,6 +15,7 @@ use Aberbin96\NovaPromocodes\Filters\{BoundToUser, Expired, MultiUse, NoUsagesLe
 use Aberbin96\NovaPromocodes\Actions\ExpirePromocode;
 use Zorb\Promocodes\Contracts\PromocodeContract;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class Promocode extends Resource
 {
@@ -25,6 +26,7 @@ class Promocode extends Resource
      * @var string
      */
     public static $model = PromocodeContract::class;
+
     /**
      * Get a fresh instance of the model represented by the resource.
      *
@@ -69,9 +71,11 @@ class Promocode extends Resource
     public function fields(Request $request): array
     {
         $userResource = explode('\\', config('promocodes.models.users.resource'));
+        $userResourceName = explode('\\', config('promocodes.models.users.resource_name'));
         $userRelation = explode('\\', config('promocodes.models.users.table_name'));
         $userResource = last($userResource);
-        $userRelation = last($userRelation);
+        $userResourceName = last($userResourceName);
+        $userRelation = Str::camel(last($userRelation));
 
         return [
             ID::make()->sortable(),
@@ -90,7 +94,7 @@ class Promocode extends Resource
 
             KeyValue::make(__('Details'), 'details'),
 
-            BelongsToMany::make($userResource, $userRelation),
+            BelongsToMany::make($userResourceName, $userRelation),
         ];
     }
 
