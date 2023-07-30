@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class BoundToUser extends Filter
 {
+    public function name()
+    {
+        return __('Bound To User');
+    }
+
     /**
      * Apply the filter to the given query.
      *

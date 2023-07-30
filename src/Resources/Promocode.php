@@ -71,11 +71,12 @@ class Promocode extends Resource
     public function fields(Request $request): array
     {
         $userResource = explode('\\', config('promocodes.models.users.resource'));
-        $userResourceName = explode('\\', config('promocodes.models.users.resource_name'));
-        $userRelation = explode('\\', config('promocodes.models.users.table_name'));
+        $userTable = explode('\\', config('promocodes.models.users.table_name'));
         $userResource = last($userResource);
-        $userResourceName = last($userResourceName);
-        $userRelation = Str::camel(last($userRelation));
+        $userTable = last($userTable);
+        $userRelation = Str::camel($userTable);
+        
+        $userResourceName = ucfirst(str_replace('_', ' ', $userTable));
 
         return [
             ID::make()->sortable(),
@@ -94,7 +95,7 @@ class Promocode extends Resource
 
             KeyValue::make(__('Details'), 'details'),
 
-            BelongsToMany::make($userResourceName, $userRelation),
+            BelongsToMany::make(__($userResourceName), $userRelation),
         ];
     }
 

@@ -2,6 +2,7 @@
 
 namespace Aberbin96\NovaPromocodes;
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Nova\Events\ServingNova;
@@ -36,8 +37,7 @@ class ToolServiceProvider extends ServiceProvider
 
         $this->app->booted(function () {
 
-            $promocodeResource = explode('\\', config('promocodes.models.promocodes.resource'));
-            $promocodeResource = last($promocodeResource);
+            $promocodeResource = Config::get('promocodes.models.promocodes.resource');
             
             $resources = [
                 PromocodeBatch::class,

@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class MultiUse extends Filter
 {
+    public function name()
+    {
+        return __('MultiUse');
+    }
+
     /**
      * Apply the filter to the given query.
      *

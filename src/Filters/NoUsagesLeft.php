@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class NoUsagesLeft extends Filter
 {
+    public function name()
+    {
+        return __('No Usages Left');
+    }
+
     /**
      * Apply the filter to the given query.
      *

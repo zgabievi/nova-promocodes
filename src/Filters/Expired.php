@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class Expired extends Filter
 {
+    public function name()
+    {
+        return __('Expired');
+    }
+
     /**
      * Apply the filter to the given query.
      *

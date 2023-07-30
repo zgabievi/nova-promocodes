@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class Unlimited extends Filter
 {
+    public function name()
+    {
+        return __('Unlimited');
+    }
+
     /**
      * Apply the filter to the given query.
      *
