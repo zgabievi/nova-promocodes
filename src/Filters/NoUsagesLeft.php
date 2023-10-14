@@ -1,12 +1,17 @@
 <?php
 
-namespace Zorb\NovaPromocodes\Filters;
+namespace Aberbin96\NovaPromocodes\Filters;
 
-use Laravel\Nova\Filters\BooleanFilter;
+use Laravel\Nova\Filters\Filter;
 use Illuminate\Http\Request;
 
-class NoUsagesLeft extends BooleanFilter
+class NoUsagesLeft extends Filter
 {
+    public function name()
+    {
+        return __('No Usages Left');
+    }
+
     /**
      * Apply the filter to the given query.
      *
@@ -17,11 +22,12 @@ class NoUsagesLeft extends BooleanFilter
      */
     public function apply(Request $request, $query, $value)
     {
-        if ($value) {
+        if ($value === true)
             return $query->where('usages_left', 0);
-        }
+        else if ($value === false)
+            return $query->whereNot('usages_left', 0);
 
-        return $query->whereNot('usages_left', 0);
+        return $query;
     }
 
     /**

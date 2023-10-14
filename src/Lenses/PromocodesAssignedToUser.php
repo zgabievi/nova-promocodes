@@ -1,6 +1,6 @@
 <?php
 
-namespace Zorb\NovaPromocodes\Lenses;
+namespace Aberbin96\NovaPromocodes\Lenses;
 
 use Laravel\Nova\Http\Requests\LensRequest;
 use Laravel\Nova\Fields\{
@@ -36,7 +36,7 @@ class PromocodesAssignedToUser extends Lens
     public static function query(LensRequest $request, $query)
     {
         return $request->withOrdering($request->withFilters(
-            $query->whereNotNull('user_id')
+            $query->whereNotNull(config('promocodes.models.users.foreign_id', 'user_id'))
         ));
     }
 
@@ -48,7 +48,7 @@ class PromocodesAssignedToUser extends Lens
      */
     public function fields(Request $request)
     {
-        $userResource = explode('\\', config('nova-promocodes.models.users.resource'));
+        $userResource = explode('\\', config('promocodes.models.users.resource'));
         $userResource = last($userResource);
 
         return [

@@ -1,8 +1,8 @@
 <?php
 
-namespace Zorb\NovaPromocodes\Resources;
+namespace Aberbin96\NovaPromocodes\Resources;
 
-use Zorb\NovaPromocodes\Lenses\{
+use Aberbin96\NovaPromocodes\Lenses\{
     PromocodesWithNoUsagesLeft,
     PromocodesAssignedToUser,
     PromocodesWithMultiUse,
@@ -11,13 +11,15 @@ use Zorb\NovaPromocodes\Lenses\{
     ExpiredPromocodes
 };
 use Laravel\Nova\Fields\{BelongsToMany, BelongsTo, DateTime, KeyValue, Boolean, Number, Text, ID};
-use Zorb\NovaPromocodes\Filters\{BoundToUser, Expired, MultiUse, NoUsagesLeft, Unlimited};
-use Zorb\NovaPromocodes\Actions\ExpirePromocode;
+use Aberbin96\NovaPromocodes\Filters\{BoundToUser, Expired, MultiUse, NoUsagesLeft, Unlimited};
+use Aberbin96\NovaPromocodes\Actions\ExpirePromocode;
 use Zorb\Promocodes\Contracts\PromocodeContract;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class Promocode extends Resource
 {
+    
     /**
      * The model the resource corresponds to.
      *
@@ -26,12 +28,24 @@ class Promocode extends Resource
     public static $model = PromocodeContract::class;
 
     /**
+     * Get a fresh instance of the model represented by the resource.
+     *
+     * @return mixed
+     */
+    public static function newModel(): mixed
+    {
+        $model = app(PromocodeContract::class);
+
+        return new $model;
+    }
+
+    /**
      * Hide resource from Nova's standard menu.
      *
      * @var bool
      */
-    public static $displayInNavigation = false;
-
+    public static $displayInNavigation = true;
+    
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
@@ -49,18 +63,6 @@ class Promocode extends Resource
     ];
 
     /**
-     * Get a fresh instance of the model represented by the resource.
-     *
-     * @return mixed
-     */
-    public static function newModel(): mixed
-    {
-        $model = app(PromocodeContract::class);
-
-        return new $model;
-    }
-
-    /**
      * Get the fields displayed by the resource.
      *
      * @param Request $request
@@ -68,53 +70,32 @@ class Promocode extends Resource
      */
     public function fields(Request $request): array
     {
-        $userResource = explode('\\', config('nova-promocodes.models.users.resource'));
+        $userResource = explode('\\', config('promocodes.models.users.resource'));
+        $userTable = explode('\\', config('promocodes.models.users.table_name'));
         $userResource = last($userResource);
+        $userTable = last($userTable);
+        $userRelation = Str::camel($userTable);
+        
+        $userResourceName = ucfirst(str_replace('_', ' ', $userTable));
 
         return [
             ID::make()->sortable(),
 
-            Number::make(__('Amount'), 'amount')
-                ->default(1)
-                ->help('How many promocodes should be created?')
-                ->required()
-                ->onlyOnForms(),
+            BelongsTo::make($userResource)->nullable(),
 
-            BelongsTo::make($userResource)
-                ->nullable(),
+            Text::make(__('Code'), 'code')->rules('required', 'unique:promocodes,code,{{resourceId}}'),
 
-            Text::make(__('Code'), 'code')
-                ->exceptOnForms(),
+            Number::make(__('Usages Left'), 'usages_left')->default(1),
 
-            Text::make(__('Mask'), 'mask')
-                ->default(config('promocodes.code_mask'))
-                ->required()
-                ->onlyOnForms(),
+            Boolean::make(__('Bound to User'), 'bound_to_user')->default(false),
 
-            Text::make(__('Characters'), 'characters')
-                ->default(config('promocodes.allowed_symbols'))
-                ->required()
-                ->onlyOnForms(),
+            Boolean::make(__('Multi Use'), 'multi_use')->default(false),
 
-            Boolean::make(__('Unlimited'), 'unlimited')
-                ->default(false)
-                ->onlyOnForms(),
-
-            Number::make(__('Usages Left'), 'usages_left')
-                ->default(1),
-
-            Boolean::make(__('Bound to User'), 'bound_to_user')
-                ->default(false),
-
-            Boolean::make(__('Multi Use'), 'multi_use')
-                ->default(false),
-
-            DateTime::make(__('Expired at'), 'expired_at')
-                ->nullable(),
+            DateTime::make(__('Expired at'), 'expired_at')->nullable(),
 
             KeyValue::make(__('Details'), 'details'),
 
-            BelongsToMany::make($userResource),
+            BelongsToMany::make(__($userResourceName), $userRelation),
         ];
     }
 
@@ -127,11 +108,11 @@ class Promocode extends Resource
     public function filters(Request $request): array
     {
         return [
-//            Expired::make(),
-//            MultiUse::make(),
-//            Unlimited::make(),
-//            NoUsagesLeft::make(),
-//            BoundToUser::make(),
+            Expired::make(),
+            MultiUse::make(),
+            Unlimited::make(),
+            NoUsagesLeft::make(),
+            BoundToUser::make(),
         ];
     }
 
@@ -162,9 +143,7 @@ class Promocode extends Resource
     public function actions(Request $request)
     {
         return [
-            ExpirePromocode::make()
-                ->showOnTableRow()
-                ->canSee(fn() => !$this->resource->isExpired()),
+            ExpirePromocode::make()->showOnTableRow()->canSee(fn() => !$this->resource->isExpired()),
         ];
     }
 }

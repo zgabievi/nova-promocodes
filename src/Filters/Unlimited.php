@@ -1,12 +1,17 @@
 <?php
 
-namespace Zorb\NovaPromocodes\Filters;
+namespace Aberbin96\NovaPromocodes\Filters;
 
-use Laravel\Nova\Filters\BooleanFilter;
+use Laravel\Nova\Filters\Filter;
 use Illuminate\Http\Request;
 
-class Unlimited extends BooleanFilter
+class Unlimited extends Filter
 {
+    public function name()
+    {
+        return __('Unlimited');
+    }
+
     /**
      * Apply the filter to the given query.
      *
@@ -17,11 +22,12 @@ class Unlimited extends BooleanFilter
      */
     public function apply(Request $request, $query, $value)
     {
-        if ($value) {
+        if ($value === true)
             return $query->where('usages_left', -1);
-        }
+        else if ($value === false)
+            return $query->whereNot('usages_left', -1);
 
-        return $query->whereNot('usages_left', -1);
+        return $query;
     }
 
     /**

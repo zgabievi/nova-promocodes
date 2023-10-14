@@ -1,13 +1,16 @@
 <?php
 
-namespace Zorb\NovaPromocodes;
+namespace Aberbin96\NovaPromocodes;
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Nova\Events\ServingNova;
+use Laravel\Nova\Http\Middleware\Authenticate;
 use Laravel\Nova\Nova;
-use Zorb\NovaPromocodes\Http\Middleware\Authorize;
-use Zorb\NovaPromocodes\Resources\Promocode;
+use Aberbin96\NovaPromocodes\Http\Middleware\Authorize;
+use Aberbin96\NovaPromocodes\Resources\Promocode;
+use Aberbin96\NovaPromocodes\Resources\PromocodeBatch;
 
 class ToolServiceProvider extends ServiceProvider
 {
@@ -18,16 +21,32 @@ class ToolServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'nova-promocodes');
+        $this->app->booted(function () {
+            $this->routes();
+        });
 
         $this->publishes([
-            __DIR__ . '/../config/nova-promocodes.php' => config_path('nova-promocodes.php'),
+            __DIR__ . '/../config/nova-promocodes-4.php' => config_path('promocodes.php'),
         ], 'config');
 
+
+        $this->publishes([
+            __DIR__ . '/../database/migrations/create_promocodes_table.php.stub' => database_path('migrations/' . date('Y_m_d_Hi') . '00_create_promocodes_table.php'),
+            __DIR__ . '/../database/migrations/create_promocode_user_table.php.stub' => database_path('migrations/' . date('Y_m_d_Hi') . '01_create_promocode_user_table.php'),
+        ], 'migrations');
+
         $this->app->booted(function () {
-            Nova::resources([
-                Promocode::class,
-            ]);
+
+            $promocodeResource = Config::get('promocodes.models.promocodes.resource');
+            
+            $resources = [
+                PromocodeBatch::class,
+            ];
+
+            if($promocodeResource === Promocode::class) 
+                $resources[] = Promocode::class;
+
+            Nova::resources($resources);
 
             $this->routes();
         });
@@ -48,8 +67,11 @@ class ToolServiceProvider extends ServiceProvider
             return;
         }
 
+        Nova::router(['nova', Authenticate::class, Authorize::class], 'promocodes-4')
+            ->group(__DIR__.'/../routes/inertia.php');
+
         Route::middleware(['nova', Authorize::class])
-            ->prefix('nova-api')
+            ->prefix('nova-vendor/promocodes-4')
             ->group(__DIR__ . '/../routes/api.php');
     }
 
@@ -60,6 +82,6 @@ class ToolServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/nova-promocodes.php', 'nova-promocodes');
+        $this->mergeConfigFrom(__DIR__ . '/../config/nova-promocodes-4.php', 'nova-promocodes-4');
     }
 }

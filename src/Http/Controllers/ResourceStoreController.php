@@ -1,14 +1,10 @@
 <?php
 
-namespace Zorb\NovaPromocodes\Http\Controllers;
+namespace Aberbin96\NovaPromocodes\Http\Controllers;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Laravel\Nova\Http\Requests\CreateResourceRequest;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\DB;
-use Laravel\Nova\Nova;
 
 class ResourceStoreController extends Controller
 {
@@ -23,18 +19,14 @@ class ResourceStoreController extends Controller
         $userId = $request->input('user');
         $user = null;
 
-        if ($userId) {
+        if ($userId)
             $user = app(config('promocodes.models.users.model'))->findOrFail($userId);
-        }
 
         $expiredAt = $request->input('expired_at');
         $expiration = null;
 
-        if ($expiredAt) {
+        if ($expiredAt) 
             $expiration = Carbon::parse($expiredAt);
-        }
-
-        ray($request->input('details'));
 
         $promocodes = createPromocodes(
             mask: $request->input('mask'),

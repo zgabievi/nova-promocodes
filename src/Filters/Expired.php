@@ -1,12 +1,17 @@
 <?php
 
-namespace Zorb\NovaPromocodes\Filters;
+namespace Aberbin96\NovaPromocodes\Filters;
 
-use Laravel\Nova\Filters\BooleanFilter;
+use Laravel\Nova\Filters\Filter;
 use Illuminate\Http\Request;
 
-class Expired extends BooleanFilter
+class Expired extends Filter
 {
+    public function name()
+    {
+        return __('Expired');
+    }
+
     /**
      * Apply the filter to the given query.
      *
@@ -17,11 +22,12 @@ class Expired extends BooleanFilter
      */
     public function apply(Request $request, $query, $value)
     {
-        if ($value) {
+        if ($value === true)
             return $query->whereNotNull('expired_at')->where('expired_at', '<=', now());
-        }
+        else if ($value === false)
+            return $query->whereNull('expired_at')->orWhere('expired_at', '>', now());
 
-        return $query->whereNull('expired_at')->orWhere('expired_at', '>', now());
+        return $query;
     }
 
     /**

@@ -1,7 +1,8 @@
 <?php
 
-namespace Zorb\NovaPromocodes\Actions;
+namespace Aberbin96\NovaPromocodes\Actions;
 
+use Illuminate\Http\Request;
 use Illuminate\Queue\InteractsWithQueue;
 use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Support\Collection;
@@ -45,7 +46,7 @@ class ExpirePromocode extends Action
      *
      * @return array
      */
-    public function fields()
+    public function fields(Request $request)
     {
         return [];
     }

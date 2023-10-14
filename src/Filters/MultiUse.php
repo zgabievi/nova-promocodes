@@ -1,12 +1,17 @@
 <?php
 
-namespace Zorb\NovaPromocodes\Filters;
+namespace Aberbin96\NovaPromocodes\Filters;
 
-use Laravel\Nova\Filters\BooleanFilter;
+use Laravel\Nova\Filters\Filter;
 use Illuminate\Http\Request;
 
-class MultiUse extends BooleanFilter
+class MultiUse extends Filter
 {
+    public function name()
+    {
+        return __('MultiUse');
+    }
+
     /**
      * Apply the filter to the given query.
      *
@@ -17,7 +22,8 @@ class MultiUse extends BooleanFilter
      */
     public function apply(Request $request, $query, $value)
     {
-        return $query->where('multi_use', $value);
+        if(is_bool($value)) return $query->where('multi_use', $value);
+        return $query;
     }
 
     /**

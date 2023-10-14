@@ -18,4 +18,4 @@ use Illuminate\Support\Facades\Route;
 //     //
 // });
 
-Route::post('/promocodes', [\Zorb\NovaPromocodes\Http\Controllers\ResourceStoreController::class, 'handle']);
+Route::post('/promocodes-4', [\Aberbin96\NovaPromocodes\Http\Controllers\ResourceStoreController::class, 'handle']);

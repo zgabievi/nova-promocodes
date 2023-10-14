@@ -1,6 +1,6 @@
 <?php
 
-namespace Zorb\NovaPromocodes\Lenses;
+namespace Aberbin96\NovaPromocodes\Lenses;
 
 use Laravel\Nova\Http\Requests\LensRequest;
 use Laravel\Nova\Fields\{
@@ -48,7 +48,7 @@ class PromocodesWithNoUsagesLeft extends Lens
      */
     public function fields(Request $request)
     {
-        $userResource = explode('\\', config('nova-promocodes.models.users.resource'));
+        $userResource = explode('\\', config('promocodes.models.users.resource'));
         $userResource = last($userResource);
 
         return [

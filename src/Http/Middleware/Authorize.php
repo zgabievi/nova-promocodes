@@ -1,8 +1,8 @@
 <?php
 
-namespace Zorb\NovaPromocodes\Http\Middleware;
+namespace Aberbin96\NovaPromocodes\Http\Middleware;
 
-use Zorb\NovaPromocodes\PromocodesTool;
+use Aberbin96\NovaPromocodes\PromocodesTool;
 use Laravel\Nova\Nova;
 
 class Authorize
@@ -11,7 +11,7 @@ class Authorize
      * Handle the incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param  \Closure(\Illuminate\Http\Request):mixed  $next
      * @return \Illuminate\Http\Response
      */
     public function handle($request, $next)
